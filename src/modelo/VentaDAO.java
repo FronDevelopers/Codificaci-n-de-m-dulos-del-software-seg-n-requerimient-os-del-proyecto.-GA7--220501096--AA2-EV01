@@ -44,5 +44,89 @@ public class VentaDAO {
 
         return ventas;
     }
+    
+        // Añadri Ventas //
+    public boolean agregarVenta(Venta venta) {
+    Connection connection = null;
+        try {
+            connection = conexionSQL.getConnection();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(VentaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    if (connection == null) {
+        return false;
+    }
+    String sql = "INSERT INTO ventas (producto, descripcion, cantidad, precio, total) VALUES (?, ?, ?, ?)";
+    try {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, venta.getProductos());
+            statement.setString(2, venta.getDescripcion());
+            statement.setInt(3, venta.getCantidad());
+            statement.setDouble(4, venta.getPrecio());
+            statement.setDouble(5, venta.getTotal());
+            statement.executeUpdate();
+        }
+        connection.close();
+        return true;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+  }
+    
+    //Actualizar Venta
+    public boolean actualizarVenta(Venta venta) {
+    Connection connection = null;
+        try {
+            connection = conexionSQL.getConnection();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(VentaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    if (connection == null) {
+        return false;
+    }
+    String sql = "UPDATE ventas SET producto = ?, descripcion =?, cantidad = ?, precio = ?, total = ? WHERE id = ?";
+    try {
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, venta.getProductos());
+        statement.setString(2, venta.getDescripcion());
+        statement.setInt(3, venta.getCantidad());
+        statement.setDouble(4, venta.getPrecio());
+        statement.setDouble(5, venta.getTotal());
+        statement.setInt(6, venta.getId_venta());
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
+        return true;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+  }
+    
+    // Eliminar Venta
+    public boolean eliminarVenta(int id_venta) {
+    Connection connection = null;
+        try {
+            connection = conexionSQL.getConnection();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(VentaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    if (connection == null) {
+        return false;
+    }
+    String sql = "DELETE FROM ventas WHERE id = ?";
+    try {
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, id_venta);
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
+        return true;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+  }
 }
 
